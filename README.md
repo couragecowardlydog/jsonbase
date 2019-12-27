@@ -1,4 +1,4 @@
-# Key Valu Store 
+# Key Value Store 
 
 ## Installation
 
