@@ -1,7 +1,7 @@
 {
-  "name": "jsonbase",
+  "name": "jsonbase-store",
   "version": "1.0.0",
-  "description": "Simple file based store",
+  "description": "Simple file based data-store",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
@@ -12,7 +12,8 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^6.2.2"
+    "mocha": "^6.2.2",
+    "nyc": "^15.0.0"
   },
   "keywords": [
     "jsonbase",
@@ -30,8 +31,6 @@
     "event-stream": "^4.0.1",
     "lockfile": "^1.0.4",
     "moment": "^2.24.0",
-    "nyc": "^15.0.0",
-    "object-sizeof": "^1.5.2",
-    "socket.io": "^2.3.0"
+    "object-sizeof": "^1.5.2"
   }
 }
