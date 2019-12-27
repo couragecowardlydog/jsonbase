@@ -38,7 +38,7 @@ await store.update("1");
 ```
 
 
-#### Delte
+#### Delete
 
 ```js
 await store.update("1");
