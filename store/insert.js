@@ -25,7 +25,7 @@ module.exports = function (store, key, value, expiresIn) {
                     return reject('102');
                 }
             }).on('error', function (err) {
-                console.log('Error while reading file.', err);
+                console.debug('Error while reading file.', err);
                 return reject('108');
             }).on('end', function () {
                 if (!read.destroyed)

@@ -28,9 +28,9 @@ module.exports = function (store, key) {
                     __removed = true;
                     line = '';
                 }
-                stream.write(line == '' ? line : line + NEWLINE);
+                stream.write((line.trim() == '') ? line : (line + NEWLINE));
             }).on('error', function (err) {
-                console.log('Error while reading file.', err);
+                console.debug('Error while reading file.', err);
                 return reject('108');
             }).on('end', function () {
                 if (!read.destroyed)
@@ -57,5 +57,4 @@ module.exports = function (store, key) {
 
 function replace(oldPath, newPath) {
     fs.renameSync(newPath, oldPath);
-    // fs.unlinkSync(newPath);
 }

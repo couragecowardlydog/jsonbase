@@ -15,7 +15,7 @@ module.exports = function (store, key) {
                     return resolve(__value__[1]);
                 }
             }).on('error', function (err) {
-                console.log('Error while reading file.', err);
+                console.debug('Error while reading file.', err);
             }).on('end', function () {
                 if (!read.destroyed)
                     read.destroy();

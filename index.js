@@ -7,6 +7,7 @@ var lockfile = require('lockfile');
 var __select = require('./store/select');
 var __delete = require('./store/delete');
 var __insert = require('./store/insert');
+var __update = require('./store/update');
 
 
 const ERROR = {
@@ -33,7 +34,7 @@ function store(path) {
         lockfile.lockSync(this.FILE_PATH + '.lock', {});
     } catch (error) {
         this.FILE_PATH = null;
-        errorHandler(('code' in error )? error['code'] : error);
+        errorHandler(('code' in error) ? error['code'] : error);
     }
 
     process.on('SIGTERM', () => {
@@ -54,12 +55,14 @@ store.prototype.insert = async function (key, value, expiresIn) {
     return false;
 }
 
-store.prototype.update = function (key, value, expiresIn) {
+store.prototype.update = async function (key, value, expiresIn) {
     try {
-
+        await __update(this.FILE_PATH, key, value, expiresIn)
+        return true;
     } catch (error) {
         errorHandler(error);
     }
+    return false;
 }
 
 store.prototype.select = async function (key) {
@@ -71,8 +74,6 @@ store.prototype.select = async function (key) {
     }
     return null;
 }
-
-
 
 
 store.prototype.delete = async function (key) {

@@ -1,7 +1,8 @@
 var fs = require('fs');
 var es = require('event-stream');
 const NEWLINE = '\n';
-module.exports = function (store, key) {
+const DELIMINATOR = '|'
+module.exports = function (store, key, value, expiresIn) {
     const updatedFile = `${store}.updated`;
     return new Promise((resolve, reject) => {
         if (!store)
@@ -26,11 +27,13 @@ module.exports = function (store, key) {
 
                     }
                     __removed = true;
-                    line = '';
+                    expiresIn = expiresIn ? moment().add(expiresIn, 'seconds').unix() : null;
+                    value = value ? JSON.stringify(value) : null;
+                    line = key + DELIMINATOR + value + DELIMINATOR + expiresIn ;
                 }
                 stream.write(line == '' ? line : line + NEWLINE);
             }).on('error', function (err) {
-                console.log('Error while reading file.', err);
+                console.debug('Error while reading file.', err);
                 return reject('108');
             }).on('end', function () {
                 if (!read.destroyed)
