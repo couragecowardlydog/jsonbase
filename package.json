@@ -1,0 +1,37 @@
+{
+  "name": "jsonbase",
+  "version": "1.0.0",
+  "description": "Simple file based store",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "www.github.com/VivekanandanS/jsonbase"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.2.2"
+  },
+  "keywords": [
+    "jsonbase",
+    "json",
+    "key-value",
+    "key",
+    "value",
+    "json",
+    "freshworks",
+    "exercise"
+  ],
+  "author": "Vivekanandan Sakthivelu",
+  "license": "ISC",
+  "dependencies": {
+    "event-stream": "^4.0.1",
+    "lockfile": "^1.0.4",
+    "moment": "^2.24.0",
+    "nyc": "^15.0.0",
+    "object-sizeof": "^1.5.2",
+    "socket.io": "^2.3.0"
+  }
+}
