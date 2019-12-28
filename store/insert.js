@@ -1,6 +1,7 @@
 var fs = require('fs');
 var es = require('event-stream');
 var size = require('object-sizeof');
+var moment = require('moment');
 const NEWLINE = '\n';
 const DELIMINATOR = '|'
 module.exports = function (store, key, value, expiresIn) {

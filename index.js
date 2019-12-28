@@ -4,6 +4,7 @@
  */
 var moment = require('moment');
 var lockfile = require('lockfile');
+var fs = require('fs');
 var __select = require('./store/select');
 var __delete = require('./store/delete');
 var __insert = require('./store/insert');
@@ -31,7 +32,9 @@ function store(path) {
         this.FILE_PATH = path;
     this.FILE_PATH = this.FILE_PATH || process.cwd() + '/' + moment().unix();
     try {
-        lockfile.lockSync(this.FILE_PATH + '.lock', {});
+        if (!fs.existsSync(this.FILE_PATH))
+            fs.createWriteStream(this.FILE_PATH);
+            lockfile.lockSync(this.FILE_PATH + '.lock', {});
     } catch (error) {
         this.FILE_PATH = null;
         errorHandler(('code' in error) ? error['code'] : error);
