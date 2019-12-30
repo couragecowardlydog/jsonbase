@@ -17,7 +17,7 @@ npm install jsonbase-store
 Either specify file path or new file will be created in current working directory
 
 ```js
-var store = require('./index')('./db');
+var store = require('jsonbase-store')('./db');
 ```
 
 
