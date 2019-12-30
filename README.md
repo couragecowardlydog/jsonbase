@@ -1,5 +1,9 @@
 # Key Value Store 
 
+Read any huge file , supports more the node's heap size
+
+Update : Caching will be added in next update , to reduce read operation on disk
+
 ## Installation
 
 Install package directly fom npm ,
