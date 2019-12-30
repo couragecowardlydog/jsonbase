@@ -10,7 +10,13 @@ var __delete = require('./store/delete');
 var __insert = require('./store/insert');
 var __update = require('./store/update');
 
-
+// 2 bytes for new line
+// 4 bytes for deliminator 
+const SINGLE_TRANSACTION = 16416 + 2 + 4;
+const DBSIZE = 2 * 1024 * 1024 * 1024;
+// So , there can be ~130816 packets store
+const MAX_OPERATIONS = DBSIZE / SINGLE_TRANSACTION;
+var NUM_OPERATIONS = 0;
 const ERROR = {
     'EEXIST': 'Some other process is using the file',
     '102': 'Key already exists, cannot insert supplied value',
@@ -19,7 +25,8 @@ const ERROR = {
     '105': 'Value supplied cannot be more than 16KB',
     '106': 'Store has reached it maximum limit',
     '107': 'Key Expired',
-    '108': 'Unexpected Error'
+    '108': 'Unexpected Error',
+    '109': 'DB Size exceeded'
 }
 var MEM_CACHE = {};
 var MEM_SIZE = 0;
@@ -34,7 +41,8 @@ function store(path) {
     try {
         if (!fs.existsSync(this.FILE_PATH))
             fs.createWriteStream(this.FILE_PATH);
-            lockfile.lockSync(this.FILE_PATH + '.lock', {});
+        lockfile.lockSync(this.FILE_PATH + '.lock', {});
+        NUM_OPERATIONS = parseInt(fs.fstatSync(this.FILE_PATH).size / SINGLE_TRANSACTION);
     } catch (error) {
         this.FILE_PATH = null;
         errorHandler(('code' in error) ? error['code'] : error);
@@ -49,8 +57,12 @@ function store(path) {
 
 store.prototype.insert = async function (key, value, expiresIn) {
     try {
+        // Check DB Size , if get close to maximum number of operations
+        if (NUM_OPERATIONS >= MAX_OPERATIONS && (fs.statSync(this.FILE_PATH).size >= DBSIZE))
+            throw '109';
         await __insert(this.FILE_PATH, key, value, expiresIn);
         console.log('INSERT 1');
+        NUM_OPERATIONS = NUM_OPERATIONS + 1;
         return true;
     } catch (error) {
         errorHandler(error)
@@ -60,6 +72,10 @@ store.prototype.insert = async function (key, value, expiresIn) {
 
 store.prototype.update = async function (key, value, expiresIn) {
     try {
+        // Check DB Size , if get close to maximum number of operations
+        if (NUM_OPERATIONS >= MAX_OPERATIONS && (fs.statSync(this.FILE_PATH).size >= DBSIZE))
+            throw '109';
+
         await __update(this.FILE_PATH, key, value, expiresIn)
         return true;
     } catch (error) {
@@ -83,6 +99,7 @@ store.prototype.delete = async function (key) {
     try {
         var result = await __delete(this.FILE_PATH, key);
         console.log('DELETE ' + (result ? 1 : 0));
+        NUM_OPERATIONS = NUM_OPERATIONS - 1;
         return result;
     } catch (error) {
         errorHandler(error);
